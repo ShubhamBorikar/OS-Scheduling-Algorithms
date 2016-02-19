@@ -1,0 +1,160 @@
+//Operating system scheduling algorithms
+
+//SJF
+
+import java.util.Scanner;
+ 
+class sjf {
+    public static void main(String args[])
+    {
+        int process[] = new int[10];
+        int ptime[] = new int[10];
+        int wtime[] = new int[10];
+        int temp, n, total=0;
+        float avg=0;
+        Scanner get = new Scanner(System.in);
+ 
+        System.out.println("Enter Number of Processes:");
+        n = get.nextInt();
+        for(int i=0;i<n;i++)
+        {
+            System.out.println("Enter Process "+(i+1)+" ID: ");
+            process[i] = get.nextInt();
+            System.out.println("Enter Process "+(i+1)+" Burst Time: ");
+            ptime[i] = get.nextInt();
+        }
+ 
+        for(int i=0;i<n-1;i++)
+        {
+            for(int j=i+1;j<n;j++)           {               if(ptime[i]>ptime[j])
+                {
+                    temp = ptime[i];
+                    ptime[i] = ptime[j];
+                    ptime[j] = temp;
+                    temp = process[i];
+                    process[i] = process[j];
+                    process[j] = temp;
+                }
+            }
+        }
+ 
+        wtime[0] = 0;
+        for(int i=1;i<n;i++)
+        {
+            wtime[i] = wtime[i-1]+ptime[i-1];
+            total = total + wtime[i];
+        }
+        avg = (float)total/n;
+        System.out.println("P_ID P_TIME W_TIME");
+        for(int i=0;i<n;i++)
+        {
+            System.out.println(process[i]+"\t"+ptime[i]+"\t"+wtime[i]);
+        }
+        System.out.println("Total Waiting Time: "+total);
+        System.out.println("Average Waiting Time: "+avg);
+    }
+}
+
+
+FCFS
+
+import java.util.*;
+class Fcfs
+{
+    public static void main(String[] args)
+    {
+        int id[]=new int[20];
+        int btime[]=new int[20];
+        int wtime[]=new int[20];
+        int total=0;
+        float avg;
+        Scanner sn = new Scanner(System.in);
+        System.out.print("\nEnter the number of processes : ");
+        int n = sn.nextInt();
+        for (int i=0;i      {
+            System.out.println();
+            System.out.print("Enter the process ID of process "+(i+1)+" : ");
+            id[i]=sn.nextInt();
+            System.out.print("Enter the burst time of process "+(i+1)+" : ");
+            btime[i]=sn.nextInt();
+        }
+        wtime[0]=0;
+        for (int i=1;i      {
+            wtime[i]=wtime[i-1]+btime[i-1];
+            total=total+wtime[i];
+        }
+        avg=(float)total/n;
+        System.out.println("\nProcess_ID\tBurst_time\tWait_time");
+        for(int i=0;i<n;i++)
+        {
+            System.out.println(id[i]+"\t\t"+btime[i]+"\t\t"+wtime[i]);
+        }
+        System.out.println("\nTotal wait time: "+total+"\nAverage wait time: "+avg);
+    }
+ 
+}
+
+
+
+
+
+SRTF
+
+
+public class SRTF {
+
+    public static void main(String args[]) throws IOException {
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader in = new BufferedReader(isr);
+
+        int n;
+        System.out.print("Enter no. of Jobs: ");
+        n = Integer.parseInt(in.readLine());
+
+        int p[] = new int[n];
+        int at[] = new int[n];
+        int bt[] = new int[n];
+        int bt2[] = new int[n];
+        int wt[] = new int[n];
+        int tat[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter Job no.: ");
+            p[i] = Integer.parseInt(in.readLine());
+            System.out.print("Enter Job " +p[i] +" arrival time: ");
+            at[i] = Integer.parseInt(in.readLine());
+            System.out.print("Enter Job " +p[i] +" burst time: ");
+            bt[i] = Integer.parseInt(in.readLine());
+            bt2[i] = bt[i];
+        }
+
+        int tbt = 0;
+        for (int i = 0; i < n; i++) {
+            tbt = tbt + bt[i];
+        }
+
+        int time[] = new int[tbt];
+        int k = 0;
+        int q2 = 0;
+
+        System.out.println("Gantt Chart");
+        System.out.print("|");
+        //bt[0] = bt[0] - 1;
+
+        for (int i = 0; i < tbt; i++) {
+            int q = Min(bt, at, tbt, i, n);
+            if (q != q2) {
+                System.out.print(" p[" + p[q] + "]\t|");
+                time[k++] = i;
+                wt[q] = i;
+                tat[q] = i + bt[q];
+            }
+            bt[q] = bt[q] - 1;
+            q2 = q;
+        }
+        time[k] = tbt;
+        System.out.println();
+        System.out.print("0\t");
+        for (int i = 0; i <= k; i++) {
+            System.out.print(time[i] + "\t");
+        }
+
